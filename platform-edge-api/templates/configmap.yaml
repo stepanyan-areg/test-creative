@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "platform-edge-api.fullname" . }}
+  labels:
+    {{- include "platform-edge-api.labels" . | nindent 4 }}
+data:
+  HTTP_SERVER_IDLE_TIMEOUT: "{{ .Values.config.http_server_idle_timeout }}"
+  PORT: "{{ .Values.config.port }}"
+  HTTP_SERVER_READ_TIMEOUT: "{{ .Values.config.http_server_read_timeout }}"
+  HTTP_SERVER_WRITE_TIMEOUT: "{{ .Values.config.http_server_write_timeout }}"
+  HTTP_SERVER_ALLOWED_ORIGIN: "{{ .Values.config.http_server_allowed_origin }}"
+  CASBIN_MODEL_PATH: "{{ .Values.config.casbin_model_path }}"
+  CASBIN_POLICY_PATH: "{{ .Values.config.casbin_policy_path }}"
+  CASBIN_AUTHZ_MODEL: "{{ .Values.config.casbin_authz_model }}"
+  CASBIN_PUBLIC_MODEL: "{{ .Values.config.casbin_public_model }}"
+  CASBIN_PRIVATE_MODEL: "{{ .Values.config.casbin_private_model }}"
+  KEYCLOAK_AUTH_URL: "{{ .Values.config.keycloak_auth_url }}"
+  KEYCLOAK_AUTH_PATH: "{{ .Values.config.keycloak_auth_path }}"
+  KEYCLOAK_GRANT_TYPE: "{{ .Values.config.keycloak_grant_type }}"
+  MANAGEMENT_SERVICE_URL: "{{ .Values.config.management_service_url }}"
+  USER_SERVICE_URL: "{{ .Values.config.user_service_url }}"
+  KEYCLOAKS: {{ .Values.config.keycloaks | quote }}
+  DATABASE_URL: postgresql://postgres:postgres@platform-edge-api-postgresql:5432/edge?sslmode=disable
+  DATABASE_LOG_LEVEL: warn
+  DATABASE_MAX_OPEN_CONNECTIONS: "10"
+  DB_PASSWORD: postgres
+  DB_NAME: edge
+  DB_USER: postgres
+  KEYCLOAK_CLIENT_ID: realm-admin-integrations
+  KEYCLOAK_CLIENT_SECRET: ccKm52DGtL80rUaDIbvod15Su1ssfJTJ

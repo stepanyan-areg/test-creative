@@ -1,0 +1,96 @@
+
+replicaCount: 1
+
+image:
+  repository: 024658484249.dkr.ecr.eu-central-1.amazonaws.com/edge-platform-api
+  pullPolicy: Always
+  tag: "a527978"
+service:
+  port: 8080
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: edge-api2.demo.dev.be.creativeadvtech.ml
+      paths:
+        - path: /api
+          pathType: ImplementationSpecific
+        - path: /swagger
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: platform-edge-api-tls
+      hosts:
+        - edge-api2.demo.dev.be.creativeadvtech.ml
+config:
+  http_server_idle_timeout: 60s
+  port: 8080
+  http_server_read_timeout: 10s
+  http_server_write_timeout: 10s
+  http_server_allowed_origin: "*"
+  casbin_model_path: ./casbin_model.conf
+  casbin_policy_path: ./casbin_policy.csv
+  casbin_authz_model: r,p,e,m
+  casbin_public_model: r2,p2,e2,m2
+  casbin_private_model: r,p,e,m3
+  keycloak_auth_url: https://keycloak.dev.be.creativeadvtech.ml
+  keycloak_auth_path: /realms/master/protocol/openid-connect/token
+  keycloak_grant_type: client_credentials
+  management_service_url: http://platform-platform-management-backend.platform.svc:8080
+  user_service_url: http://users-service.users-service.svc:8080
+  keycloaks: "{\n    \"oPivgvvxQmCckZe_A5n3iuA6VstNp6k5n2tkM-3e6Qw\": {\n        \"kid\": \"oPivgvvxQmCckZe_A5n3iuA6VstNp6k5n2tkM-3e6Qw\",\n        \"pubKey\": \"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmTPQYlax43i5y7KEjqUZjpsxQ9YGOUJsqGYlUAMviz8UBcP37J9XhOgIboEzf9ZOSLaPGehc3JSEZ/jhBzyQXJab4jvYb7IoQ5DbeArre3oyhO5pWXslggg/z0jy/q7oTLmoCiTSyyeY/RpKNww2MdRF2YOtwvDCvd2+buAQCRbdh704cMwbY2GgRBJnkpnVHKcDYWg1tge3pflO1RujDWdNSPMtCAEhvr3R/xvfIuMbdJvNhDoU476Pxr1S2ViSAEWJtt5qJXUfPodR47hp350hXs+908v5wQCxbGahsm2ESJrnk5b041xyWrOgkQZiTbDioIIyxGE3venUzUmbywIDAQAB\",\n        \"aud\": \"https://sso.management.dev.smb.creativeadvtech.ml/auth/realms/earthlink\",\n        \"iss\": \"https://sso.management.dev.smb.creativeadvtech.ml/auth/realms/earthlink\",\n        \"domain\": \"platform\"\n    },\n    \"I1XDqZZ2j-lhZ2Ycww_YT5ZiBs9adyMpR1r0sCTQo2w\": {\n        \"kid\": \"I1XDqZZ2j-lhZ2Ycww_YT5ZiBs9adyMpR1r0sCTQo2w\",\n        \"pubKey\": \"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyKXE2usR16oYFCKrYird8uOyZ34hcKQtP3zhCsP4gbogkvrZctk2h1CzgXbDmelP+39h51LoqDgFeo6eVqA8+nU/Up6xfGpDdSKYx5kiSSa5OYzZHVkbMGIOs/yvQdcF9RiqjFzEHhFLJkqnsnrxwQEvEZ3384uRHYSIfj0ad9+7mo5HxP31d9tYS3B9IphKimQmKtp9+aQWTIQC49QFDTxXA+RsaPFxLjFY/zFK7uZN+MK0hBSfjRLpT0QFkI+Yl2INFup8Yp8CREPrQbQ2XHxErPyezolPXRPrXSCxBNe4BrbW3K7xHA+AmLMYHlAmitqj1XrPdrXp1JVefsK6QQIDAQAB\",\n        \"aud\": \"https://keycloak.dev.be.creativeadvtech.ml/realms/be2-platform\",\n        \"iss\": \"https://keycloak.dev.be.creativeadvtech.ml/realms/be2-platform\",\n        \"domain\": \"customer\"\n    },\n    \"372eaef0-a2f7-4445-8522-4fb42c12b554\": {\n        \"kid\": \"372eaef0-a2f7-4445-8522-4fb42c12b554\",\n        \"pubKey\": \"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnZr98cmaRDc8tw+VnqN/ICL6smmyJ8utiMxa2fSz+rEwRoKWDoHT+6Jmkv5ANmSz0iKCE8++0DGlfuDLChiJkRoT6F5Nhl3vkU94SM+2tYM7nDurjJyJDYwe8creXvd2ao9Fxfkzdr0P9UFgCsQhyZ5JNYr+Wpq8tFo5WMBmXwWhvlrcVxXhVVI8Ino3V7ASZTHcTGYJRxxjjQaQIcxFjDBuLse+55uqKTbbOmsnvp5/rdZkCmg3eMXw45+CbUalp+JkaJPThUPDbnyElnuvigsl/yNINdmZg9wC4WW3K/g1fmT9Q5uyq+obQIkhJCcDYv1XeRDS0yiihWuqVLiS1QIDAQAB\",\n        \"aud\": \"https://keycloak.dev.be.creativeadvtech.ml/realms/be2-platform\",\n        \"iss\": \"https://users.dev.be.creativeadvtech.ml/api/auth/integrated/platform\",\n        \"domain\": \"customer\"\n    }\n} \n"
+
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# service:
+#   type: ClusterIP
+#   port: 80
+
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
